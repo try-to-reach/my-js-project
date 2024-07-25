@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>۱۰ سایت برتر</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+        }
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .site {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .site img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+        .site-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .site-info a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .site-info a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">۱۰ سایت برتر</div>
+        <div id="site-list">
+            <!-- Sites will be added here -->
+        </div>
+    </div>
+
+    <script>
+        function getTopSites() {
+            const apiKey = 'gc8400g0ock84wc004ckk4s0gokgc044so4wokwo';
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `https://openpagerank.com/api/v1.0/getPageRank?domains[]=example1.com&domains[]=example2.com&domains[]=example3.com`, true);
+            xhr.setRequestHeader('API-OPR', apiKey);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    const siteList = document.getElementById('site-list');
+                    data.response.forEach(site => {
+                        const siteDiv = document.createElement('div');
+                        siteDiv.className = 'site';
+
+                        const siteInfo = document.createElement('div');
+                        siteInfo.className = 'site-info';
+
+                        const siteName = document.createElement('a');
+                        siteName.href = `http://${site.domain}`;
+                        siteName.textContent = site.domain;
+
+                        siteInfo.appendChild(siteName);
+                        siteDiv.appendChild(siteInfo);
+
+                        siteList.appendChild(siteDiv);
+                    });
+                }
+            };
+            xhr.send();
+        }
+
+        getTopSites();
+    </script>
+</body>
+</html>
