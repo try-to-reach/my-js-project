@@ -66,30 +66,37 @@
     <script>
         function getTopSites() {
             const apiKey = 'gc8400g0ock84wc004ckk4s0gokgc044so4wokwo';
+            const proxyUrl = 'https://api.allorigins.win/get?url=';
+            const apiUrl = 'https://openpagerank.com/api/v1.0/getPageRank?domains[]=example1.com&domains[]=example2.com&domains[]=example3.com';
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', `https://openpagerank.com/api/v1.0/getPageRank?domains[]=example1.com&domains[]=example2.com&domains[]=example3.com`, true);
+            xhr.open('GET', proxyUrl + encodeURIComponent(apiUrl), true);
             xhr.setRequestHeader('API-OPR', apiKey);
 
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const data = JSON.parse(xhr.responseText);
-                    const siteList = document.getElementById('site-list');
-                    data.response.forEach(site => {
-                        const siteDiv = document.createElement('div');
-                        siteDiv.className = 'site';
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        const data = JSON.parse(response.contents);
+                        const siteList = document.getElementById('site-list');
+                        data.response.forEach(site => {
+                            const siteDiv = document.createElement('div');
+                            siteDiv.className = 'site';
 
-                        const siteInfo = document.createElement('div');
-                        siteInfo.className = 'site-info';
+                            const siteInfo = document.createElement('div');
+                            siteInfo.className = 'site-info';
 
-                        const siteName = document.createElement('a');
-                        siteName.href = `http://${site.domain}`;
-                        siteName.textContent = site.domain;
+                            const siteName = document.createElement('a');
+                            siteName.href = `http://${site.domain}`;
+                            siteName.textContent = site.domain;
 
-                        siteInfo.appendChild(siteName);
-                        siteDiv.appendChild(siteInfo);
+                            siteInfo.appendChild(siteName);
+                            siteDiv.appendChild(siteInfo);
 
-                        siteList.appendChild(siteDiv);
-                    });
+                            siteList.appendChild(siteDiv);
+                        });
+                    } else {
+                        console.error('Error: ' + xhr.status);
+                    }
                 }
             };
             xhr.send();
